@@ -20,6 +20,6 @@ int main() {
     printf("%s\n", inputB);
     printf("%s ", inputB);
     printf("%s\n", inputA);
-    printf("failTesddt");
+
     return 0;
 }

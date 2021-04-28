@@ -7,4 +7,4 @@ COPY main.py main.py
 COPY checks.json checks.json
 COPY studentCode.c studentCode.c
 RUN gcc -o studentProgram studentCode.c
-CMD python3.9 main.py
+CMD python3.9 -u main.py

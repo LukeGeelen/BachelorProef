@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b8babd36-41bc-4a3d-96f9-3bbb3db42c2c" name="bpvps">
+        <fileTransfer rootFolder="/home/luke" accessType="SFTP" host="bpvps" port="22" sshConfigId="24db76a5-83b3-4317-a2ee-56f736637f9c" sshConfig="luke@bpvps:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

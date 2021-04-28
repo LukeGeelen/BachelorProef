@@ -1,0 +1,73 @@
+body{
+    background-color:#F7FAFC;
+    #background-color:blue;
+}
+
+
+h1{
+    text-align:left;
+}
+
+.kader{
+    min-height:40px;
+    width: 100%;
+    background-color:#ffffff;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.checkKaderPassed{
+    min-height:40px;
+    margin-left:20px;
+    margin-right:20px;
+    background-color:green;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+
+.checkKaderFailed{
+    min-height:40px;
+    margin-left:20px;
+    margin-right:20px;
+    background-color:red;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+
+
+.checkKaderPending{
+    min-height:40px;
+    margin-left:20px;
+    margin-right:20px;
+    background-color:#E7EAEC;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+
+.assignmentTitle{
+    font-size: 20px;
+    font-style: bold;
+
+}
+
+.assignmentDiscription{
+    color:#606060;
+}
+
+
+.assignmentButton{
+    margin-top:15px;
+    width:200px;
+    height: 35px;
+    line-height: 35px;
+    border-radius:20px;
+    background-color: green;
+    text-align: center;
+    color: white;
+    text-decoration-line: none;
+    margin-left:auto;
+    margin-right:auto;
+}
