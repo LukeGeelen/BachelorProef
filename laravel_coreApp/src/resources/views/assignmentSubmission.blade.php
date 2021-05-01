@@ -1,4 +1,5 @@
-<!doctype html>
+
+    <!doctype html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -13,53 +14,40 @@
 </head>
 <body>
 <!-- titlebar -->
-<div class="containter">
+<div class="container">
     <div class='row' style="margin-top:20px">
         <div class='col-md-2'>
         </div>
         <div class='col-8'>
-            <h1>SUMBIT YOUR ASSIGNMENT</h1>
+            <h1>SUBMISSIONS FOR {{$assignment->title}} </h1>
+            <a href="/controleer/{{$assignment->id}}" target="_blank"><div class="assignmentButton" width="80%">controleer op plagiaat</div></a>
         </div>
         <div class='col-md-2'>
         </div>
     </div>
 </div>
 
-<!-- content -->
-<div class="containter">
-    <div class='row' style="margin-top:20px">
-        <div class='col-md-2'>
-        </div>
-        <div class='col-8'>
-            <div class="kader">
-                <div class='assignmentTitle'>
-                    {{$assignment->title}}
-                </div>
-                <div class='assignmentDiscription'>
-                    {{$assignment->description}}
-                </div>
-                <br>
-                <div class='assignmentDiscription'>
-                    please upload all project files (including makefile)
-                    make sure the makefile generates the program as main.out
+<div class="container">
+    @foreach($submissions as $submission)
+        <div class='row' style="margin-top:20px">
+            <div class='col-md-2'>
+            </div>
+            <div class='col-md-8'>
+                <div class="kader">
+                    <div class='assignmentTitle'>
+                        {{$assignment->title . ' By ' . $submission->name }}
+                    </div>
+                    <div class='assignmentDiscription'>
+                        {{$submission->created_at}}
+                    </div>
+                    <a href="/submissions/{{$submission->id}}"><div class="assignmentButton">SHOW</div></a>
 
                 </div>
-                <br>
-                <form enctype="multipart/form-data"  method="POST">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                    <label for="name">name:</label><br>
-                    <input type="text" id="name" name="name"><br>
-
-                    <label for="files"></label><br>
-                    <input type="file" name="file[]" id="file[]" multiple>
-
-                    <input class='assignmentButton 'type="submit" value="SUBMIT">
-                </form>
-
+            </div>
+            <div class='col-md-2'>
             </div>
         </div>
-        <div class='col-md-2'>
-        </div>
-    </div></div>
-
+    @endforeach
+</div>
 </body>
+</html>

@@ -1,0 +1,7 @@
+<?php
+echo "hi";
+echo shell_exec("docker build -t student_execution /var/www/html/docker/");
+echo "build done, running";
+echo shell_exec("docker run --net host -t student_execution"); //.  "> /dev/null 2>/dev/null &");
+echo "done";
+?>

@@ -22,6 +22,8 @@ class submitController extends Controller
         $submission->assignment_id = $assignmentId;
         $submission->save();
         mkdir('/var/www/storage/app/submissions/' . strval($submission->id), 0777, true);
+        $submission->resource_path = '/var/www/storage/app/submissions/' . strval($submission->id);
+        $submission->save();
         foreach ($_FILES["file"]["error"] as $key => $error) {
             if ($error == UPLOAD_ERR_OK) {
                 $tmp_name = $_FILES["file"]["tmp_name"][$key];
@@ -81,9 +83,8 @@ class submitController extends Controller
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($request);
 
-        die($result);
 
-        curl_close();
+        curl_close($request);
         return redirect()->route('submissionDetail', ['submissionId' => $submission->id]);
     }
 

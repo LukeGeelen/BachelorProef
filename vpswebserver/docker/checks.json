@@ -1,0 +1,14 @@
+{
+    "tests":[{
+	"id":"1",
+        "input": "hello\nworld",
+        "output": "hello world\nworld hello\n"
+    },
+    {
+	"id":"2",
+        "input": "I'm\nLuke",
+        "output": "I'm Luke\nLuke I'm\n"
+        }
+    ]
+        
+}

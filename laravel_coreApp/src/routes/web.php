@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\indexController;
 use App\Http\Controllers\submitController;
 use App\Http\Controllers\submitListController;
+use App\Http\Controllers\assignmentSubmissionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,3 +21,6 @@ Route::get('/assignment/{assignmentId}', [submitController::class, 'view']);
 Route::post('/assignment/{assignmentId}', [submitController::class, 'submit']);
 Route::get('/submissions', [submitListController::class, 'viewPage']);
 Route::get('/submissions/{submissionId}', [submitListController::class, 'viewDetail'])->name('submissionDetail');
+Route::get('/assignedSubmissions/{assignmentId}', [assignmentSubmissionController::class, 'view']);
+Route::get('/controleer/{assignmentId}', [assignmentSubmissionController::class, 'controleerOpPlagiaat']);
+
