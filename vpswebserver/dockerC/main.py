@@ -52,15 +52,18 @@ def getDockerInterfaceIp():
     getIP.terminate();
     return IP.rstrip()
 
-def compile(submissionId, ip):
-    commandcom = ['make', '-C', './code']
+def compile(submissionId):
+    commandcom = 'make -C ./code'
 
-    compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
-    outputcom = compile.communicate(input='')[0]
-    print("compile: " + outputcom)
+    compile = subprocess.Popen(commandcom, shell=True,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,encoding='utf8')
+    out , err = compile.communicate(input='')
+    print("compile: " + out)
     compile.terminate()
 
     print("<br><br>")
+    print("compilererr:" + err)
+    print("<br><br>")
+    outputcom = out + "\n" + err
     url = 'http://' + ip + '/processResult.php?type=compiler&id='
     url += str(submissionId)
     url += '&compilerOutput='
@@ -72,18 +75,18 @@ def compile(submissionId, ip):
     return 0
 
 
-def runLinter(submissionId, ip):
+def runLinter(submissionId):
     commandlint = ['scan-build', 'make', '-C', './code']
-    linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
-    output = linter.communicate(input='')[0]
-    print("lint: " + output)
+    linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
+    output,err = linter.communicate(input='')
+    print("lint: " + err)
     linter.terminate()
     print("<br><br>")
 
     url = 'http://' + ip + '/processResult.php?type=linter&id='
     url += str(submissionId)
     url += '&linterOutput='
-    url += urllib.parse.quote_plus(output)
+    url += urllib.parse.quote_plus(err)
     print(url)
     x=requests.get(url)
     print(x.text)
@@ -100,9 +103,9 @@ if __name__ == '__main__':
     print("sumbission" + str(submission))
     print("<br><br>")
 
-    compile(submission, ip)
+    compile(submission)
 
-    runLinter(submission, ip)
+    runLinter(submission)
 
     jsonData = {}
     results = [] #todo remove json output, not needed
