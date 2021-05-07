@@ -1,1 +1,0 @@
-{"results": [{"id": "0", "input": "hello\nworld", "expectedOutput": "hello world\nworld hello\n", "realOutput": "hello world\nworld hello\nfailTesddt", "passing": false}, {"id": "1", "input": "I'm\nLuke", "expectedOutput": "I'm Luke\nLuke I'm\n", "realOutput": "I'm Luke\nLuke I'm\nfailTesddt", "passing": false}]}
