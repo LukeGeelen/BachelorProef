@@ -76,9 +76,26 @@
                 </div>
                     <br>
                 @endforeach
-
-
-            </div>
+                <div class='assignmentDiscription'>
+                    <b>Compiler output:</b>
+                </div>
+                <br>
+                <div class="checkKaderPending">
+                    @php
+                        echo nl2br($submission->compiler);
+                        @endphp
+                </div>
+                                <br>
+                <div class='assignmentDiscription'>
+                    <b>Linter output:</b>
+                </div>
+                <br>
+                <div class="checkKaderPending">
+                    @php
+                        echo nl2br($submission->linter);
+                    @endphp
+                </div>
+        </div>
         </div>
         <div class='col-md-2'>
         </div>
