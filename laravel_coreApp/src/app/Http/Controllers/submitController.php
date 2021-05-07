@@ -98,7 +98,7 @@ class submitController extends Controller
         $result->check_passed = $passed;
         $result->save();
 
-        return "OK";
+        return "OK, result saved";
 
     }
 
@@ -109,7 +109,7 @@ class submitController extends Controller
         $submission->compiler = $out;
         $submission->save();
 
-        return "OK";
+        return "OK, compiler saved";
     }
 
     public function reportLinter($submissionId, Request $request){
@@ -119,6 +119,6 @@ class submitController extends Controller
         $submission->linter = $out;
         $submission->save();
 
-        return "OK";
+        return "OK, linter saved";
     }
 }

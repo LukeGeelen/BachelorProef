@@ -18,8 +18,8 @@ class CreateSubmissionTable extends Migration
             $table->foreignId("assignment_id");
             $table->string('resource_path')->nullable();
             $table->string('name');
-            $table->string('compiler')->nullable();
-            $table->string('linter')->nullable();
+            $table->text('compiler')->nullable();
+            $table->text('linter')->nullable();
             $table->timestamps();
         });
     }
