@@ -16,7 +16,7 @@ echo "starting";
 $build = shell_exec("docker build -t student_execution /var/www/html/dockerC/ --build-arg CACHEBUST=$(date +%s)");
 echo $build;
 echo "build done, running";
-$run =  shell_exec("docker run --net host -t student_execution"); //.  "> /dev/null 2>/dev/null &");
+$run =  shell_exec("docker run -t student_execution"); //.  "> /dev/null 2>/dev/null &");
 echo $run;
 echo "done";
 
@@ -42,7 +42,7 @@ echo "starting";
 $build = shell_exec("docker build -t student_execution /var/www/html/dockerJava/ --build-arg CACHEBUST=$(date +%s)");
 echo $build;
 echo "build done, running";
-$run =  shell_exec("docker run --net host -t student_execution"); //  "> /dev/null 2>/dev/null &");
+$run =  shell_exec("docker run -t student_execution"); //  "> /dev/null 2>/dev/null &");
 echo $run;
 echo "done";
 
