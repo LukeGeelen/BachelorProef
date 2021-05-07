@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/reportResult/{testId}', [submitController::class, 'report']);
+Route::post('/reportCompiler/{submissionId}', [submitController::class, 'reportCompile']);
+Route::post('/reportCompiler/{submissionId}', [submitController::class, 'reportLinter']);

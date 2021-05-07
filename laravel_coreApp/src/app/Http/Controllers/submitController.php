@@ -54,6 +54,7 @@ class submitController extends Controller
         }
 
         $body = [
+            'submission'=>$submission->id,
             'tests'=>$testData
         ];
 
@@ -99,5 +100,25 @@ class submitController extends Controller
 
         return "OK";
 
+    }
+
+    public function reportCompile($submissionId, Request $request){
+        $out = $request->input('compilerOutput');
+
+        $submission = Submission::find($submissionId);
+        $submission->compiler = $out;
+        $submission->save();
+
+        return "OK";
+    }
+
+    public function reportLinter($submissionId, Request $request){
+        $out = $request->input('linterOutput');
+
+        $submission = Submission::find($submissionId);
+        $submission->linter = $out;
+        $submission->save();
+
+        return "OK";
     }
 }
