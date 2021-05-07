@@ -35,7 +35,7 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     return (output, passing)
 
 def handoffResult(ip, id, output, passing):
-    url = 'http://' + ip + '/processResult.php?id='
+    url = 'http://' + ip + '/processResult.php?type=result&id='
     url += str(id);
     url += '&output='
     url += urllib.parse.quote_plus(output)
@@ -52,21 +52,27 @@ def getDockerInterfaceIp():
     getIP.terminate();
     return IP.rstrip()
 
-
-
-if __name__ == '__main__':
-    print(sys.version_info)
-    ip = getDockerInterfaceIp()
-    #compile the program
-    print("<br><br>")
+def compile(submissionId):
     commandcom = ['make', '-C', './code']
 
     compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
     outputcom = compile.communicate(input='')[0]
     print("compile: " + outputcom)
     compile.terminate()
-    print("<br><br>")
 
+    print("<br><br>")
+    url = 'http://' + ip + '/processResult.php?type=compiler&id='
+    url += str(submissionId)
+    url += '&compilerOutput='
+    url += urllib.parse.quote_plus(outputcom)
+    print(url)
+    x=requests.get(url)
+    print(x.text)
+    print('<br>repCom above<br><br>')
+    return 0
+
+
+def runLinter(submissionId):
     commandlint = ['scan-build', 'make', '-C', './code']
     linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
     output = linter.communicate(input='')[0]
@@ -74,10 +80,32 @@ if __name__ == '__main__':
     linter.terminate()
     print("<br><br>")
 
+    url = 'http://' + ip + '/processResult.php?type=linter&id='
+    url += str(submissionId)
+    url += '&linterOutput='
+    url += urllib.parse.quote_plus(output)
+    print(url)
+    x=requests.get(url)
+    print(x.text)
+
+    return 0
+
+if __name__ == '__main__':
+
+    ip = getDockerInterfaceIp()
+
     checks_file = open('./code/checks.json')
     checks = json.load(checks_file)
+    submission = checks['submission']
+    print("sumbission" + str(submission))
+    print("<br><br>")
+
+    compile(submission)
+
+    runLinter(submission)
+
     jsonData = {}
-    results = []
+    results = [] #todo remove json output, not needed
     for check in checks['tests']:
         result = {}
         output, outputMatch = test(ip, check['id'], check['input'].replace("\\n", "\n"), check['output'].replace("\\n", "\n"))
