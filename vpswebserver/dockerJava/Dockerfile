@@ -11,8 +11,9 @@ ARG CACHEBUST=1
 WORKDIR /usr/src/
 COPY ./code/* ./code/
 COPY ./getDockerIP.sh ./code/getDockerIP.sh
+COPY ./checkstyle-8.42-all.jar ./code/checkstyle.jar
+COPY ./googleConfig.xml ./code/styleconfiguration.xml
 WORKDIR /usr/src/code
 COPY main.py main.py
-RUN make
 WORKDIR /usr/src/code
 CMD python3.9 -u main.py

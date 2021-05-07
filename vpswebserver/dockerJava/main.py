@@ -1,3 +1,4 @@
+
 import subprocess
 import json
 import sys
@@ -70,8 +71,8 @@ def compile(submissionId, ip):
     return 0
 
 def runLinter(submissionId, ip):
-    commandlint = ['echo', 'hi']
-    linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
+    commandlint = 'java -jar checkstyle.jar -c ./styleconfiguration.xml *.java'
+    linter = subprocess.Popen(commandlint, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
     output = linter.communicate(input='')[0]
     print("lint: " + output)
     linter.terminate()
