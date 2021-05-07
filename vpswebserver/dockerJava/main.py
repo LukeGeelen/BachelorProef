@@ -34,7 +34,7 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     return (output, passing)
 
 def handoffResult(ip, id, output, passing):
-    url = 'http://' + ip + '/processResult.php?id='
+    url = 'http://' + ip + '/processResult.php?type=result&id='
     url += str(id);
     url += '&output='
     url += urllib.parse.quote_plus(output)
@@ -51,14 +51,54 @@ def getDockerInterfaceIp():
     getIP.terminate();
     return IP.rstrip()
 
+def compile(submissionId, ip):
+    commandcom = ['make']
+    compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
+    outputcom = compile.communicate(input='')[0]
+    print("compile: " + outputcom)
+    compile.terminate()
+    print("<br><br>")
 
+    url = 'http://' + ip + '/processResult.php?type=compiler&id='
+    url += str(submissionId)
+    url += '&compilerOutput='
+    url += urllib.parse.quote_plus(outputcom)
+    print(url)
+    x=requests.get(url)
+    print(x.text)
+    print('<br>repCom above<br><br>')
+    return 0
+
+def runLinter(submissionId, ip):
+    commandlint = ['echo', 'hi']
+    linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
+    output = linter.communicate(input='')[0]
+    print("lint: " + output)
+    linter.terminate()
+    print("<br><br>")
+
+    url = 'http://' + ip + '/processResult.php?type=linter&id='
+    url += str(submissionId)
+    url += '&linterOutput='
+    url += urllib.parse.quote_plus(output)
+    print(url)
+    x=requests.get(url)
+    print(x.text)
+
+    return 0
+    
 if __name__ == '__main__':
-    print(sys.version_info)
-
-    ip = getDockerInterfaceIp()
-
     checks_file = open('./checks.json')
     checks = json.load(checks_file)
+    submission = checks['submission']
+    
+    ip = getDockerInterfaceIp()
+    
+    compile(submission, ip);
+    
+    runLinter(submission, ip)
+
+   
     jsonData = {}
     results = []
 
