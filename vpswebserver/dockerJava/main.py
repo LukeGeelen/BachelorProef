@@ -31,19 +31,32 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
         print("checkFailed")
         print("Expected: " + expectedOutput)
         print("got: " + output)
-    handoffResult(ip, id, output, passing)
+    p.terminate()
+    arguments= {'id':str(id), 'output':urllib.parse.quote_plus(output), 'passing':str(passing)}
+    handoff(ip, 'result', arguments)
     return (output, passing)
 
-def handoffResult(ip, id, output, passing):
-    url = 'http://' + ip + '/processResult.php?type=result&id='
-    url += str(id);
-    url += '&output='
-    url += urllib.parse.quote_plus(output)
-    url += '&passing='
-    url += str(passing)
+def handoff(ip, calltype, arguments, attempts=0):
+    if(attempts >= 3):
+        #todo log
+        print("REQUEST FAILED")
+        return -1;
+    url = 'http://' + ip + '/processResult.php?type='
+    url += calltype
+    for argument, value in arguments.items():
+        url += '&' +argument + '='
+        url += str(value)
     print(url)
-    x = requests.get(url)
+    try:
+        x = requests.get(url)
+    except requests.exceptions.RequestException as e: 
+        handoff(ip, calltype, arguments, (attempts+1))
+    
     print(x.text)
+    if(x.text.rstrip() == "OK"):
+        return 0;
+    else:
+        handoff(ip, calltype, arguments, (attempts+1))
 
 def getDockerInterfaceIp():
     command = ['./getDockerIP.sh']
@@ -55,19 +68,13 @@ def getDockerInterfaceIp():
 def compile(submissionId, ip):
     commandcom = ['make']
     compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
-    output,err = compile.communicate(input='')
-    print("compile: " + output)
+    out,err = compile.communicate(input='')
+    print("compile: " + out)
     compile.terminate()
-    print("<br><br>")
-    outputcom = output + '\n' + err
-    url = 'http://' + ip + '/processResult.php?type=compiler&id='
-    url += str(submissionId)
-    url += '&compilerOutput='
-    url += urllib.parse.quote_plus(outputcom)
-    print(url)
-    x=requests.get(url)
-    print(x.text)
-    print('<br>repCom above<br><br>')
+
+    outputcom = out + "\n" + err
+    arguments = {'id':str(submissionId), 'compilerOutput':urllib.parse.quote_plus(outputcom)}
+    handoff(ip, 'compiler', arguments)
     return 0
 
 def runLinter(submissionId, ip):
@@ -76,16 +83,8 @@ def runLinter(submissionId, ip):
     output = linter.communicate(input='')[0]
     print("lint: " + output)
     linter.terminate()
-    print("<br><br>")
-
-    url = 'http://' + ip + '/processResult.php?type=linter&id='
-    url += str(submissionId)
-    url += '&linterOutput='
-    url += urllib.parse.quote_plus(output)
-    print(url)
-    x=requests.get(url)
-    print(x.text)
-
+    arguments = {'id':str(submissionId), 'linterOutput':urllib.parse.quote_plus(output)}
+    handoff(ip, 'linter', arguments)
     return 0
 
 if __name__ == '__main__':
