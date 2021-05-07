@@ -54,12 +54,12 @@ def getDockerInterfaceIp():
 
 def compile(submissionId, ip):
     commandcom = ['make']
-    compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
-    outputcom = compile.communicate(input='')[0]
-    print("compile: " + outputcom)
+    compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
+    output,err = compile.communicate(input='')
+    print("compile: " + output)
     compile.terminate()
     print("<br><br>")
-
+    outputcom = output + '\n' + err
     url = 'http://' + ip + '/processResult.php?type=compiler&id='
     url += str(submissionId)
     url += '&compilerOutput='
@@ -87,19 +87,19 @@ def runLinter(submissionId, ip):
     print(x.text)
 
     return 0
-    
+
 if __name__ == '__main__':
     checks_file = open('./checks.json')
     checks = json.load(checks_file)
     submission = checks['submission']
-    
+
     ip = getDockerInterfaceIp()
-    
+
     compile(submission, ip);
-    
+
     runLinter(submission, ip)
 
-   
+
     jsonData = {}
     results = []
 
