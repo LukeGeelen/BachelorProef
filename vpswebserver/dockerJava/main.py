@@ -11,7 +11,7 @@ def charBycharComp(expected, got):
     return
 
 
-def test(id, input, expectedOutput, stripTrailingNewlines=True):
+def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     #A lot of programs will terminate with a newline
     #This newline might not be provided for in the checks.json
     #the stripTrailingNewlines will remove a trailing newline from both the output and the expected output
@@ -30,11 +30,11 @@ def test(id, input, expectedOutput, stripTrailingNewlines=True):
         print("checkFailed")
         print("Expected: " + expectedOutput)
         print("got: " + output)
-    handoffResult(id, output, passing)
+    handoffResult(ip, id, output, passing)
     return (output, passing)
 
-def handoffResult(id, output, passing):
-    url = 'http://127.0.0.1/processResult.php?id='
+def handoffResult(ip, id, output, passing):
+    url = 'http://' + ip + '/processResult.php?id='
     url += str(id);
     url += '&output='
     url += urllib.parse.quote_plus(output)
@@ -44,15 +44,28 @@ def handoffResult(id, output, passing):
     x = requests.get(url)
     print(x.text)
 
+def getDockerInterfaceIp():
+    command = ['./getDockerIP.sh']
+    getIP = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
+    IP = getIP.communicate(input='')[0]
+    getIP.terminate();
+    return IP.rstrip()
+
+
 if __name__ == '__main__':
     print(sys.version_info)
+
+    ip = getDockerInterfaceIp()
+
     checks_file = open('./checks.json')
     checks = json.load(checks_file)
     jsonData = {}
     results = []
+
+
     for check in checks['tests']:
         result = {}
-        output, outputMatch = test(check['id'], check['input'].replace("\\n", "\n"), check['output'].replace("\\n", "\n"))
+        output, outputMatch = test(ip, check['id'], check['input'].replace("\\n", "\n"), check['output'].replace("\\n", "\n"))
         result['id'] = check['id']
         result['input'] = check['input']
         result['expectedOutput'] = check['output']
