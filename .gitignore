@@ -2,10 +2,13 @@
 *.out
 *.json
 *.c
+*.java
 *.lock
 *.env
+makefile
 .env
 .DS_Store
 monitorInDocker/.idea
 monitorInDocker/venv
-vpswebserver/docker/codeBak
+vpswebserver/dockerC/codeBak
+vpswebserver/dockerJava/codeBak
