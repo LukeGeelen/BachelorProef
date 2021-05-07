@@ -1,4 +1,8 @@
 *.o
 *.out
 *.json
+*.lock
+*.env
+.env
+.DS_Store
 monitorInDocker/venv
