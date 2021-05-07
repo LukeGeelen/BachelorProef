@@ -52,7 +52,7 @@ def getDockerInterfaceIp():
     getIP.terminate();
     return IP.rstrip()
 
-def compile(submissionId):
+def compile(submissionId, ip):
     commandcom = ['make', '-C', './code']
 
     compile = subprocess.Popen(commandcom, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
@@ -72,7 +72,7 @@ def compile(submissionId):
     return 0
 
 
-def runLinter(submissionId):
+def runLinter(submissionId, ip):
     commandlint = ['scan-build', 'make', '-C', './code']
     linter = subprocess.Popen(commandlint, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
     output = linter.communicate(input='')[0]
@@ -100,9 +100,9 @@ if __name__ == '__main__':
     print("sumbission" + str(submission))
     print("<br><br>")
 
-    compile(submission)
+    compile(submission, ip)
 
-    runLinter(submission)
+    runLinter(submission, ip)
 
     jsonData = {}
     results = [] #todo remove json output, not needed
