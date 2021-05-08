@@ -3,6 +3,7 @@ import json
 import sys
 import requests
 import urllib.parse
+import logging
 
 def charBycharComp(expected, got):
     for x,y in zip(expected, got):
@@ -37,15 +38,16 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     return (output, passing)
     
 def handoff(ip, calltype, arguments, attempts=0):
-    if(attempts >= 3):
-        #todo log
-        print("REQUEST FAILED")
-        return -1;
     url = 'http://' + ip + '/processResult.php?type='
     url += calltype
     for argument, value in arguments.items():
         url += '&' +argument + '='
         url += str(value)
+    if(attempts >= 3):
+        #todo log
+        logging.error("failed to make request after 3 attempts, URL: " + url)
+        print("REQUEST FAILED")
+        return -1;
     print(url)
     try:
         x = requests.get(url)
@@ -94,7 +96,8 @@ def runLinter(submissionId):
     return 0
 
 if __name__ == '__main__':
-
+    logging.basicConfig(filename='/log/remoteExecutionInC.log', encoding='utf-8', level=logging.DEBUG)
+    
     ip = getDockerInterfaceIp()
 
     checks_file = open('./code/checks.json')

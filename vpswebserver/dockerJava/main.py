@@ -4,6 +4,7 @@ import json
 import sys
 import requests
 import urllib.parse
+import logging
 
 def charBycharComp(expected, got):
     for x,y in zip(expected, got):
@@ -37,15 +38,15 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     return (output, passing)
 
 def handoff(ip, calltype, arguments, attempts=0):
-    if(attempts >= 3):
-        #todo log
-        print("REQUEST FAILED")
-        return -1;
     url = 'http://' + ip + '/processResult.php?type='
     url += calltype
     for argument, value in arguments.items():
         url += '&' +argument + '='
         url += str(value)
+    if(attempts >= 3):
+        logging.error("failed to make request after 3 attempts, URL: " + url)
+        print("REQUEST FAILED")
+        return -1;
     print(url)
     try:
         x = requests.get(url)
@@ -88,6 +89,8 @@ def runLinter(submissionId, ip):
     return 0
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='/log/remoteExecutionInJava.log', encoding='utf-8', level=logging.DEBUG)
+    
     checks_file = open('./checks.json')
     checks = json.load(checks_file)
     submission = checks['submission']
