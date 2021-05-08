@@ -12,21 +12,21 @@ foreach ($_FILES["file"]["error"] as $key => $error) {
                 move_uploaded_file($tmp_name, '/var/www/html/dockerC/code' . '/'. $name);
             }
 }
-echo "starting";
-$build = shell_exec("docker build -t student_execution /var/www/html/dockerC/ --build-arg CACHEBUST=$(date +%s)");
-echo $build;
-echo "build done, running";
-$run =  shell_exec("docker run -v CLog:/log -t student_execution "); //.  "> /dev/null 2>/dev/null &");
-echo $run;
-echo "done";
+//echo "starting";
+$build = shell_exec("docker build -t student_execution /var/www/html/dockerC/ --build-arg CACHEBUST=$(date +%s)"); //we run build synchronous so it gets the time to copy the source files
 
-$files = glob('/var/www/html/docker/code/*'); // get all file names
+$run =  shell_exec("docker run -v CLog:/log -t student_execution > /dev/null 2>/dev/null &");
+//echo $run;
+//echo "done";
+
+$files = glob('/var/www/html/dockerC/code/*'); // get all file names
 foreach($files as $file){ // iterate files
   if(is_file($file)) {
     unlink($file); // delete file
   }
 }
-echo "finished cleanup";
+die("OK");
+//echo "finished cleanup";
 }elseif($_POST["lang"] == "java"){
 foreach ($_FILES["file"]["error"] as $key => $error) {
             if ($error == UPLOAD_ERR_OK) {
@@ -38,20 +38,20 @@ foreach ($_FILES["file"]["error"] as $key => $error) {
             }
 }
 
-echo "starting";
+
 $build = shell_exec("docker build -t student_execution /var/www/html/dockerJava/ --build-arg CACHEBUST=$(date +%s)");
-echo $build;
-echo "build done, running";
-$run =  shell_exec("docker run -v JavaLog:/log -t student_execution"); //  "> /dev/null 2>/dev/null &");
-echo $run;
-echo "done";
+
+
+$run =  shell_exec("docker run -v JavaLog:/log -t student_execution > /dev/null 2>/dev/null &");
+
 
 $files = glob('/var/www/html/dockerJava/code/*'); // get all file names
 foreach($files as $file){ // iterate files
   if(is_file($file)) {
-//    unlink($file); // delete file
+    unlink($file); // delete file
   }
 }
+die("OK");  
 }else{
     die("language not supported");
 }
