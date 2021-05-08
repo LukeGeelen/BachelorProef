@@ -6,6 +6,8 @@ import requests
 import urllib.parse
 import logging
 
+max_time = 1
+
 def charBycharComp(expected, got):
     for x,y in zip(expected, got):
         print("exp: " + x)
@@ -21,6 +23,16 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
 
     p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
     output = p.communicate(input=input)[0]
+    
+    try:
+        program=subprocess.run(command, input=input.encode(), capture_output=True, timeout=max_time)
+        output = program.stdout.decode("utf-8")
+        print(output)
+    except subprocess.TimeoutExpired:
+        output = "[monitor] program timed out before completion, time limit is " + str(max_time) + 's'
+        print("TIMEOUT")
+        logging.warning('execution of check: ' + str(id) + ' has timed out')
+        
     if stripTrailingNewlines:
         output = output.rstrip()
         expectedOutput = expectedOutput.rstrip()
