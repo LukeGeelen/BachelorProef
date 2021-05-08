@@ -5,6 +5,8 @@ import requests
 import urllib.parse
 import logging
 
+max_time = 1
+
 def charBycharComp(expected, got):
     for x,y in zip(expected, got):
         print("exp: " + x)
@@ -18,8 +20,19 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     #the stripTrailingNewlines will remove a trailing newline from both the output and the expected output
     command = ['./code/main.out']
 
-    p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
-    output = p.communicate(input=input)[0]
+    #p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
+    
+    #output = p.communicate(input=input)[0]
+    #output = subprocess.run(command,input=input, capture_output=True, timeout=1)
+    try:
+        program = subprocess.run(command, input=input.encode(), capture_output=True, timeout=1)
+        output = program.stdout.decode("utf-8")
+        print(output)
+    except subprocess.TimeoutExpired:
+        output = "[monitor] program timed out before completion, time limit is " + str(max_time) + 's'
+        print("TIMEOUT")
+        logging.warning('execution of check: ' + str(id) + ' has timed out')
+        
     if stripTrailingNewlines:
         output = output.rstrip()
         expectedOutput = expectedOutput.rstrip()
@@ -31,7 +44,7 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
         print("checkFailed")
         print("Expected: " + expectedOutput)
         print("got: " + output)
-    p.terminate()
+   
     arguments= {'id':str(id), 'output':urllib.parse.quote_plus(output), 'passing':str(passing)}
     handoff(ip, 'result', arguments)
     #handoffResult(ip, id, output, passing)
