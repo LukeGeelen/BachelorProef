@@ -3,7 +3,8 @@
 *.json
 vpswebserver/dockerC/*.c
 vpswebserver/dockerC/code/*.c
-*.java
+vpswebserver/dockerJava/code/*.java
+vpswebserver/dockerJava/*.java
 *.lock
 *.env
 vpswebserver/dockerC/Makefile
