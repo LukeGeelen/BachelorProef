@@ -19,11 +19,6 @@ def test(ip, id, input, expectedOutput, stripTrailingNewlines=True):
     #This newline might not be provided for in the checks.json
     #the stripTrailingNewlines will remove a trailing newline from both the output and the expected output
     command = ['./code/main.out']
-
-    #p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, encoding='utf8')
-    
-    #output = p.communicate(input=input)[0]
-    #output = subprocess.run(command,input=input, capture_output=True, timeout=1)
     try:
         program = subprocess.run(command, input=input.encode(), capture_output=True, timeout=1)
         output = program.stdout.decode("utf-8")
